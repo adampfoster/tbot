@@ -53,8 +53,8 @@ let setTrailingStopLoss = (listedPrice) => {
   }, interval);
 };
 
-let checkForProfit = (listedPrice, profitPercent, profitMultiplier) => {
-  let profitTargetPrice = buyPrice * (1 + (profitPercent * profitMultiplier));
+let checkForProfit = (listedPrice, profitTarget) => {
+  let profitTargetPrice = buyPrice * (1 + (profitTarget));
   console.log('profit: ', profitTargetPrice);
 
   if (listedPrice >= profitTargetPrice) {
@@ -63,8 +63,8 @@ let checkForProfit = (listedPrice, profitPercent, profitMultiplier) => {
   }
 };
 
-let checkForLoss = (listedPrice, stopLossPercent, stopLossMultiplier) => {
-  let stopLossPrice = buyPrice - (buyPrice * (stopLossMultiplier * stopLossPercent));
+let checkForLoss = (listedPrice, stopLossTarget) => {
+  let stopLossPrice = buyPrice - (buyPrice * (stopLossTarget));
   console.log('stoploss: ' + stopLossPrice);
 
   if (listedPrice <= stopLossPrice) {
@@ -98,8 +98,8 @@ let streamCoinPrice = () => {
     let lastCoinPrice = getCoinPrice();
     lastCoinPrice.then((result) => {
       console.log('lastCoinPrice: ', result);
-      checkForProfit(result, profitPercent, profitMultiplier);
-      checkForLoss(result, stopLossPercent, stopLossMultiplier);
+      checkForProfit(result, profitTarget);
+      checkForLoss(result, stopLossTarget);
     });
   }, interval);
 };
