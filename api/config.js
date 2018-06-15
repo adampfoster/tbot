@@ -7,7 +7,7 @@ const binanceoptions = {
   APIKEY: apikey,
   APISECRET: apisecret,
   useServerTime: true, // If you get timestamp errors, synchronize to server time at startup
-  test: true // If you want to use sandbox mode where orders are simulated
+  test: false // If you want to use sandbox mode where orders are simulated
 };
 
 module.exports = binanceoptions;
