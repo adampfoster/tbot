@@ -1,8 +1,10 @@
 /*jshint esversion: 6 */
+
 console.log('Trading bot started.');
 
 const apiconfig = require('./api/config.js');
 const binance = require('node-binance-api');
+const buy = require('./buy.js');
 
 binance.options({
   APIKEY: apiconfig.APIKEY,
@@ -34,10 +36,34 @@ let profitRecord;
 
 console.log('coinarg: ', coinarg);
 
+let marketSell = (pair, quantity) => {
+  // buyPrice = price;
+  // console.log('Sold for ' + buyPrice)
+  binance.marketSell(pair, quantity, (error, response) => {
+    if (error) {
+      console.log("Market Sell error", error);
+    }
+    console.log("Market Sell response", response);
+    console.log("order id: " + response.orderId);
+    // Now you can limit sell with a stop loss, etc.
+  });
+};
 
-let buyIn = (price) => {
-  buyPrice = price;
-  console.log('Bought for ' + buyPrice)
+let checkOrder = (orderid, pair) => {
+  binance.orderStatus(pair, orderid, (error, orderStatus, symbol) => {
+    console.log(symbol + ' order status: ', orderStatus);
+  });
+};
+
+let checkTrade = (pair, orderId) => {
+  binance.trades(pair, (error, trades, symbol) => {
+    // console.log(symbol + 'trade history ', trades);
+    // console.log('Number of trades: ', trades.length);
+    trades.map((trade) => {
+      if (trade.orderId == orderId)
+      console.log('order trades ', trade);
+    })
+  });
 };
 
 let sellOut = (price) => {
@@ -90,43 +116,8 @@ let checkForProfitLoss = (listedPrice, trailingStopLossTarget) => {
   }
 };
 
-let getCoinPrice = () => {
-  return new Promise((resolve, reject) => {
-    binance.prices(coinpair, (error, ticker) => {
-      if (error) {
-        reject(error);
-      } else {
-        // console.log('Price of ' + coin[0] + ':', ticker[coinpair]);
-        resolve(ticker[coinpair]);
-      }
-    });
-  });
-};
-
-let getAllCoinPrices = () => {
-  binance.prices((error, ticker) => {
-    console.log('Showing all coin prices', ticker)
-  });
-};
-
-let streamCoinPrice = () => {
-  interval = 3000;
-  
-  setInterval(()=> {
-    let lastCoinPrice = getCoinPrice();
-    lastCoinPrice.then((result) => {
-      console.log('lastCoinPrice: ', result);
-      checkForProfit(result, profitTarget);
-      checkForLoss(result, stopLossTarget);
-    });
-  }, interval);
-};
-
-
-buyIn(15.25);
-streamCoinPrice();
-// console.log('apiconfig', apiconfig);
-
-binance.balance((error, balances) => {
-  console.log('balances', balances);
-});
+buy.market(coinpair, 1);
+// marketSell(coinpair, 5);
+// checkOrder(36661989, 'BNBUSDT');
+// checkTrade('BNBUSDT', 36661989);
+// streamCoinPrice();
