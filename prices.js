@@ -1,6 +1,9 @@
 /*jshint esversion: 6 */
 
 const binance = require('node-binance-api');
+const globals = require('./globals.js');
+const profit = require('./profit.js');
+const loss = require('./loss.js');
 
 var getPrice = {};
 
@@ -23,15 +26,15 @@ getPrice.all = () => {
   });
 },
 
-getPrice.stream = () => {
+getPrice.stream = (pair) => {
   interval = 3000;
   
   setInterval(()=> {
-    let lastCoinPrice = getCoinPrice(coinpair);
+    let lastCoinPrice = getPrice.coin(pair);
     lastCoinPrice.then((result) => {
       console.log('lastCoinPrice: ', result);
-      checkForProfit(result, profitTarget);
-      checkForLoss(result, stopLossTarget);
+      profit.check(result, globals.profitTarget);
+      loss.check(result, globals.stopLossTarget);
     });
   }, interval);
 };
