@@ -1,7 +1,7 @@
 /*jshint esversion: 6 */
 console.log('Trading bot started.');
 
-const apiconfig = require('./api/config');
+const apiconfig = require('./api/config.js');
 const binance = require('node-binance-api');
 
 binance.options({
@@ -24,8 +24,13 @@ const stopLossPercent = .005;
 const stopLossMultiplier = 1;
 const stopLossTarget = stopLossPercent * stopLossMultiplier;
 
-let buyPrice = undefined;
-let sellPrice = undefined;
+const trailingStopLossPercent = .0025;
+const trailingStopLossMultiplier = 1;
+const trailingStopLossTarget = trailingStopLossPercent * trailingStopLossMultiplier;
+
+let buyPrice;
+let sellPrice;
+let profitRecord;
 
 console.log('coinarg: ', coinarg);
 
@@ -40,13 +45,17 @@ let sellOut = (price) => {
   console.log('Sold for ' + sellPrice)
 };
 
-let newProfitRecord = (listedPrice) => {
-  console.log('Checking for a new profit record: ', listedPrice);
+let setNewProfitRecord = (listedPrice) => {
+  if (listedPrice > profitRecord) {
+    console.log('Setting a new profit record of: ', listedPrice);
+    profitRecord = listedPrice;
+  }
 };
 
 let setTrailingStopLoss = (listedPrice) => {
-  interval = 1000 * 60 // Try not to get banned by placing and cancelling orders too mucn
-  newProfitRecord(listedPrice);
+  let interval = 1000 * 10; // Try not to get banned by placing and cancelling orders too much
+
+  setNewProfitRecord(listedPrice);
 
   setInterval(()=> {
     newProfitRecord(listedPrice);
@@ -59,7 +68,7 @@ let checkForProfit = (listedPrice, profitTarget) => {
 
   if (listedPrice >= profitTargetPrice) {
     console.log('Profit target reached');
-    invokeTrailingStopLoss(listedPrice);
+    setTrailingStopLoss(listedPrice);
   }
 };
 
@@ -69,6 +78,15 @@ let checkForLoss = (listedPrice, stopLossTarget) => {
 
   if (listedPrice <= stopLossPrice) {
     console.warn('Stop loss triggered');
+  }
+};
+
+let checkForProfitLoss = (listedPrice, trailingStopLossTarget) => {
+  let trailingStopLossPrice = buyPrice - (buyPrice * (trailingStopLossTarget));
+  console.log('trailingStoploss: ' + trailingStopLossPrice);
+
+  if (listedPrice <= trailingStopLossPrice) {
+    console.warn('Trailing stop loss triggered');
   }
 };
 
@@ -107,3 +125,8 @@ let streamCoinPrice = () => {
 
 buyIn(15.25);
 streamCoinPrice();
+// console.log('apiconfig', apiconfig);
+
+binance.balance((error, balances) => {
+  console.log('balances', balances);
+});
