@@ -19,8 +19,8 @@ globals.trailingStopLossPercent = .0025;
 globals.trailingStopLossMultiplier = 1;
 globals.trailingStopLossTarget = globals.trailingStopLossPercent * globals.trailingStopLossMultiplier;
 
-globals.buyPrice;
-globals.sellPrice;
-globals.profitRecord;
+globals.buyPrice = 0;
+globals.sellPrice = 0;
+globals.profitRecord = 0;
 
 module.exports = globals;

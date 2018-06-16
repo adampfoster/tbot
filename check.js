@@ -22,4 +22,3 @@ check.trade = (pair, orderId) => {
 };
 
 module.exports = check;
-  

@@ -7,6 +7,7 @@ const getPrice = require('./prices.js');
 var profit = {};
 
 profit.check = (listedPrice, profitTarget) => {
+  console.log('globals.buyPrice', globals.buyPrice);
   let profitTargetPrice = globals.buyPrice * (1 + (profitTarget));
   console.log('profit: ', profitTargetPrice);
 
@@ -26,7 +27,7 @@ profit.lossCheck = (listedPrice, trailingStopLossTarget) => {
 };
 
 profit.setNewProfitRecord = (listedPrice) => {
-  if (listedPrice > profitRecord) {
+  if (listedPrice > globals.profitRecord) {
     console.log('Setting a new profit record of: ', listedPrice);
     globals.profitRecord = listedPrice;
   }
