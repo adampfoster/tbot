@@ -5,9 +5,9 @@ const globals = require('./globals.js');
 const profit = require('./profit.js');
 const loss = require('./loss.js');
 
-var getPrice = {};
+var prices = {};
 
-getPrice.coin = (pair) => {
+prices.coin = (pair) => {
   return new Promise((resolve, reject) => {
     binance.prices(pair, (error, ticker) => {
       if (error) {
@@ -20,17 +20,17 @@ getPrice.coin = (pair) => {
   });
 };
 
-getPrice.all = () => {
+prices.all = () => {
   binance.prices((error, ticker) => {
     console.log('Showing all coin prices', ticker)
   });
 },
 
-getPrice.stream = (pair) => {
+prices.stream = (pair) => {
   interval = 3000;
   
   setInterval(()=> {
-    let lastCoinPrice = getPrice.coin(pair);
+    let lastCoinPrice = prices.coin(pair);
     lastCoinPrice.then((result) => {
       console.log('lastCoinPrice: ', result);
       profit.check(result, globals.profitTarget);
@@ -39,4 +39,4 @@ getPrice.stream = (pair) => {
   }, interval);
 };
 
-module.exports = getPrice;
+module.exports = prices;
