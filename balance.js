@@ -1,7 +1,7 @@
 /*jshint esversion: 6 */
 
-const binance = require('node-binance-api');
-const globals = require('./globals.js');
+const binance = require("node-binance-api")();
+const globals = require("./globals.js");
 
 var balance = {};
 
@@ -11,6 +11,6 @@ balance.getAll = () => {
     console.log("BNB balance: ", balances.BNB.available);
     console.log("ETH balance: ", balances.ETH.available);
   });
-}
+};
 
 module.exports = balance;

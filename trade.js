@@ -3,9 +3,9 @@
 const binance = require("node-binance-api")();
 const globals = require("./globals.js");
 
-var orders = {};
+var trade = {};
 
-orders.getAll = pair => {
+trade.basic = (pair, profit) => {
   binance.openOrders(false, (error, openOrders) => {
     if (openOrders.length == 0) {
       console.log("You have no open orders bud");
@@ -15,4 +15,4 @@ orders.getAll = pair => {
   });
 };
 
-module.exports = orders;
+module.exports = trade;

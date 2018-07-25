@@ -1,18 +1,19 @@
 /*jshint esversion: 6 */
 
-console.log('Trading bot started.');
+console.log("Trading bot started.");
 
-const apiconfig = require('./api/config.js');
-const binance = require('node-binance-api');
-const globals = require('./globals.js');
-const balance = require('./balance.js');
-const buy = require('./buy.js');
-const sell = require('./sell.js');
-const profit = require('./profit.js');
-const loss = require('./loss.js');
-const check = require('./check.js');
-const prices = require('./prices.js');
-const orders = require('./orders.js');
+const apiconfig = require("./api/config.js");
+const binance = require("node-binance-api")();
+const globals = require("./globals.js");
+const balance = require("./balance.js");
+const buy = require("./buy.js");
+const sell = require("./sell.js");
+const profit = require("./profit.js");
+const loss = require("./loss.js");
+const check = require("./check.js");
+const prices = require("./prices.js");
+const orders = require("./orders.js");
+const trade = require("./trade.js");
 
 binance.options({
   APIKEY: apiconfig.APIKEY,
@@ -23,16 +24,19 @@ binance.options({
 
 if (process.argv.length > 2) {
   let arg = process.argv[2];
-  console.log('has args', arg);
-  switch(arg) {
-    case 'orders':
+  console.log("has args", arg);
+  switch (arg) {
+    case "trade":
+      trade.basic();
+      break;
+    case "orders":
       orders.getAll();
       break;
-    case 'balance':
+    case "balance":
       balance.getAll();
       break;
     default:
-      console.log('running default');
+      console.log("running default");
       prices.stream(globals.coinpair);
   }
 }
