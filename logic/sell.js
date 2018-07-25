@@ -1,7 +1,7 @@
 /*jshint esversion: 6 */
 
-const getPrice = require("./prices.js");
 const binance = require("node-binance-api")();
+const getPrice = require("./prices.js");
 
 var sell = {};
 

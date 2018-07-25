@@ -13,29 +13,31 @@ prices.coin = pair => {
       if (error) {
         reject(error);
       } else {
-        // console.log('Price of ' + coin[0] + ':', ticker[coinpair]);
+        // console.log("Price of " + coin[0] + ":", ticker[coinpair]);
         resolve(ticker[pair]);
       }
     });
   });
 };
 
-(prices.all = () => {
+prices.all = () => {
+  console.log("streaming ALL");
   binance.prices((error, ticker) => {
     console.log("Showing all coin prices", ticker);
   });
-}),
-  (prices.stream = pair => {
-    interval = 3000;
+};
 
-    setInterval(() => {
-      let lastCoinPrice = prices.coin(pair);
-      lastCoinPrice.then(result => {
-        console.log("lastCoinPrice: ", result);
-        profit.check(result, globals.profitTarget);
-        loss.check(result, globals.stopLossTarget);
-      });
-    }, interval);
-  });
+prices.stream = pair => {
+  interval = 3000;
+
+  setInterval(() => {
+    let lastCoinPrice = prices.coin(pair);
+    lastCoinPrice.then(result => {
+      console.log("lastCoinPrice: ", result);
+      profit.check(result, globals.profitTarget);
+      loss.check(result, globals.stopLossTarget);
+    });
+  }, interval);
+};
 
 module.exports = prices;

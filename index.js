@@ -4,16 +4,16 @@ console.log("Trading bot started.");
 
 const apiconfig = require("./api/config.js");
 const binance = require("node-binance-api")();
-const globals = require("./globals.js");
-const balance = require("./balance.js");
-const buy = require("./buy.js");
-const sell = require("./sell.js");
-const profit = require("./profit.js");
-const loss = require("./loss.js");
-const check = require("./check.js");
-const prices = require("./prices.js");
-const orders = require("./orders.js");
-const trade = require("./trade.js");
+const globals = require("./logic/globals");
+const balance = require("./logic/balance.js");
+const buy = require("./logic/buy.js");
+const sell = require("./logic/sell.js");
+const profit = require("./logic/profit.js");
+const loss = require("./logic/loss.js");
+const check = require("./logic/check.js");
+const prices = require("./logic/prices.js");
+const orders = require("./logic/orders.js");
+const trade = require("./logic/trade.js");
 
 binance.options({
   APIKEY: apiconfig.APIKEY,
@@ -35,10 +35,10 @@ if (process.argv.length > 2) {
     case "balance":
       balance.getAll();
       break;
-    default:
-      console.log("running default");
-      prices.stream(globals.coinpair);
   }
+} else {
+  console.log("running default");
+  prices.stream(globals.coinpair);
 }
 
 // buy.market(coinpair, 1);
